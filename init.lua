@@ -25,50 +25,17 @@ crafts
 
 minetest.register_node("springs:spring", {
 	description = "Spring",
-	drawtype = "nodebox",
-	paramtype = "light",  
-	tiles = {
-		{
-			name = "default_river_water_source_animated.png",
-			animation = {
-				type = "vertical_frames",
-				aspect_w = 16,
-				aspect_h = 16,
-				length = 2.0,
-			},
-		},
-	},
-	special_tiles = {
-		{
-			name = "default_river_water_source_animated.png",
-			animation = {
-				type = "vertical_frames",
-				aspect_w = 16,
-				aspect_h = 16,
-				length = 2.0,
-			},
-			backface_culling = false,
-		},
-	},
-	leveled = 64,
-	alpha = 160,
-	drop = "",
-	drowning = 1,
-	walkable = false, -- because viscosity doesn't work for regular nodes, and the liquid hack can't be leveled
-	climbable = true, -- because viscosity doesn't work for regular nodes, and the liquid hack can't be leveled
-	pointable = false,
-	diggable = false,
-	buildable_to = true,
+	tiles = {"default_cobble.png^default_river_water.png"},
+	--paramtype = "light",  
+	--leveled = 64,
+	--alpha = 160,
+	drop = "default:cobble",
+	--drowning = 1,
+	walkable = true, -- because viscosity doesn't work for regular nodes, and the liquid hack can't be leveled
 	
-	post_effect_color = {a = 103, r = 30, g = 76, b = 120},
-	groups = { puts_out_fire = 1, liquid = 3, cools_lava = 1},
+--	post_effect_color = {a = 103, r = 30, g = 76, b = 120},
+	groups = { puts_out_fire = 1, is_ground_content = 1, cools_lava = 1},
 	sounds = default.node_sound_water_defaults(),
-	node_box = {
-		type = "leveled",
-		fixed = {
-			{-0.5, -0.5, -0.5, 0.5, 0.5, 0.5}, -- NodeBox1
-		}
-	}
 })
 
 
@@ -131,8 +98,8 @@ minetest.register_node("springs:water", {
 minetest.register_abm({
 	nodenames = {"springs:spring"},
 	neighbors = {"group:fresh_water", "air"},
-	interval = 2,
-	chance = 1,
+	interval = 5,
+	chance = 30,
 	action = function(pos)
 -- 		local mylevel = minetest.get_node_level(pos)
 		
@@ -150,7 +117,7 @@ minetest.register_abm({
 		local tpos = air_nodes[math.random(#air_nodes)]
 		
 		-- calculate flow rate based on absolute location
-		local prate = minetest.hash_node_position(pos) % 48
+		local prate = (minetest.hash_node_position(pos) % 48)
 		local amount = math.random(1, 16) + prate
 		
 		local t = minetest.get_node(tpos)
@@ -440,11 +407,32 @@ minetest.register_ore({
 	ore            = "springs:spring",
 	wherein        = "default:stone",
 	clust_scarcity = 16 * 16 * 16,
-	clust_num_ores = 2,
-	clust_size     = 2,
+	clust_num_ores = 8,
+	clust_size     = 3,
 	y_min          = -50,
-	y_max          = -20,
+	y_max          = -10,
 })
+
+minetest.register_ore({
+	ore_type       = "scatter",
+	ore            = "springs:spring",
+	wherein        = "default:stone",
+	clust_scarcity = 8 * 8 * 8,
+	clust_num_ores = 10,
+	clust_size     = 4,
+	y_min          = -50,
+	y_max          = -25,
+})
+-- minetest.register_ore({
+-- 	ore_type       = "scatter",
+-- 	ore            = "springs:spring",
+-- 	wherein        = "default:stone",
+-- 	clust_scarcity = 8 * 8 * 8,
+-- 	clust_num_ores = 16,
+-- 	clust_size     = 5,
+-- 	y_min          = -50,
+-- 	y_max          = -40,
+-- })
 
 -- TODO: desert stone, sandstone
 
