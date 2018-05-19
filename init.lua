@@ -13,11 +13,14 @@ pipe inlet/outlet pressure checks
 broken outlet sharing
 non-connected pipes and splitters
 fix wells
-convert springs to cracked rock
+better springs texture
+optimize static water
 pumps
 fix spout and intake nodeboxes
 
 crafts
+
+galvanized-ish pipes (coat in tin)
 
 ]]
 
@@ -34,7 +37,7 @@ minetest.register_node("springs:spring", {
 	walkable = true, -- because viscosity doesn't work for regular nodes, and the liquid hack can't be leveled
 	
 --	post_effect_color = {a = 103, r = 30, g = 76, b = 120},
-	groups = { puts_out_fire = 1, is_ground_content = 1, cools_lava = 1},
+	groups = { puts_out_fire = 1, cracky = 1, is_ground_content = 1, cools_lava = 1},
 	sounds = default.node_sound_water_defaults(),
 })
 
@@ -94,12 +97,73 @@ minetest.register_node("springs:water", {
 	}
 })
 
+
+
+-- this is a special node used to optimize large pools of water
+-- its flowing abm runs much less frequently
+minetest.register_node("springs:water_full", {
+	description = "node ",
+	drawtype = "nodebox",
+	paramtype = "light",  
+	tiles = {
+		{
+			name = "default_river_water_source_animated.png",
+			animation = {
+				type = "vertical_frames",
+				aspect_w = 16,
+				aspect_h = 16,
+				length = 2.0,
+			},
+		},
+	},
+	special_tiles = {
+		{
+			name = "default_river_water_source_animated.png",
+			animation = {
+				type = "vertical_frames",
+				aspect_w = 16,
+				aspect_h = 16,
+				length = 2.0,
+			},
+			backface_culling = false,
+		},
+	},
+	leveled = 64,
+	alpha = 160,
+	drop = "",
+	drowning = 1,
+	walkable = false, -- because viscosity doesn't work for regular nodes, and the liquid hack can't be leveled
+	climbable = true, -- because viscosity doesn't work for regular nodes, and the liquid hack can't be leveled
+	pointable = false,
+	diggable = false,
+	buildable_to = true,
+	
+-- 	       liquid_viscosity = 14,
+--        liquidtype = "source",
+--        liquid_alternative_flowing = "springs:water",
+--        liquid_alternative_source = "springs:water",
+--        liquid_renewable = false,
+--        liquid_range = 0,
+--     groups = {crumbly=3,soil=1,falling_node=1},
+	post_effect_color = {a = 103, r = 30, g = 76, b = 90},
+	groups = { puts_out_fire = 1, liquid = 3, cools_lava = 1, fresh_water=1},
+	sounds = default.node_sound_water_defaults(),
+	node_box = {
+		type = "leveled",
+		fixed = {
+			{-0.5, -0.5, -0.5, 0.5, 0.5, 0.5}, -- NodeBox1
+		}
+	}
+})
+
+
+
 -- spring
 minetest.register_abm({
 	nodenames = {"springs:spring"},
 	neighbors = {"group:fresh_water", "air"},
 	interval = 5,
-	chance = 30,
+	chance = 60,
 	action = function(pos)
 -- 		local mylevel = minetest.get_node_level(pos)
 		
@@ -258,9 +322,21 @@ minetest.register_abm({
 	end
 })
 
+-- de-stagnation (faster flowing)
+minetest.register_abm({
+	nodenames = {"springs:water_full"},
+	neighbors = {"air"},
+	interval = 5,
+	chance = 1,
+	action = function(pos)
+		-- if it's near air it might flow
+		minetest.set_node(pos, {name = "springs:water"})
+	end
+})
+	
 -- flowing
 minetest.register_abm({
-	nodenames = {"group:fresh_water"},
+	nodenames = {"springs:water"},
 	neighbors = {"group:fresh_water", "air"},
 	interval = 1,
 	chance = 1,
@@ -268,6 +344,7 @@ minetest.register_abm({
 		local mylevel = minetest.get_node_level(pos)
 -- 		print("\n mylevel ".. mylevel)
 	
+		-- falling
 		local below = {x=pos.x, y=pos.y - 1, z=pos.z}
 		local nbelow = minetest.get_node(below).name
 		if nbelow == "air" then
@@ -372,6 +449,12 @@ minetest.register_abm({
 -- 			end
 -- 		end
 		
+		
+		-- stagnation: this may not work
+		if mylevel == 64 then
+			print("stagnating ".. pos.x .. ","..pos.y..","..pos.z)
+			minetest.set_node(pos, {name = "springs:water_full"})
+		end
 	end
 })
 
@@ -407,7 +490,7 @@ minetest.register_ore({
 	ore            = "springs:spring",
 	wherein        = "default:stone",
 	clust_scarcity = 16 * 16 * 16,
-	clust_num_ores = 8,
+	clust_num_ores = 3,
 	clust_size     = 3,
 	y_min          = -50,
 	y_max          = -10,
@@ -418,11 +501,27 @@ minetest.register_ore({
 	ore            = "springs:spring",
 	wherein        = "default:stone",
 	clust_scarcity = 8 * 8 * 8,
-	clust_num_ores = 10,
+	clust_num_ores = 5,
 	clust_size     = 4,
 	y_min          = -50,
 	y_max          = -25,
 })
+
+
+
+-- deep water - rare but bountiful
+minetest.register_ore({
+	ore_type       = "scatter",
+	ore            = "springs:spring",
+	wherein        = "default:stone",
+	clust_scarcity = 64 * 64 * 64,
+	clust_num_ores = 12,
+	clust_size     = 6,
+	y_min          = -32000,
+	y_max          = -100,
+})
+
+
 -- minetest.register_ore({
 -- 	ore_type       = "scatter",
 -- 	ore            = "springs:spring",

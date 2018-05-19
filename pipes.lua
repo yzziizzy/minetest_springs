@@ -470,3 +470,27 @@ minetest.register_node("springs:pipe", {
 	end
 	
 })
+
+
+minetest.register_craft({
+	output = "springs:pipe 2",
+	recipe = {
+		{"default:steel_ingot", "", "default:steel_ingot"},
+		{"default:steel_ingot", "", "default:steel_ingot"},
+		{"default:steel_ingot", "", "default:steel_ingot"},
+	}
+})
+
+minetest.register_craft({
+	output = "springs:intake 1",
+	type = "shapeless",
+	recipe = {"springs:pipe", "default:tin_ingot"},
+})
+
+minetest.register_craft({
+	output = "springs:spout 1",
+	type = "shapeless",
+	recipe = {"springs:pipe", "default:copper_ingot"},
+})
+
+
