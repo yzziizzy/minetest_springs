@@ -157,7 +157,8 @@ minetest.register_abm({
 		
 		pos.y = pos.y + 1
 		local unode = minetest.get_node(pos)
-		if unode.name ~= "springs:water" then
+		if unode.name ~= "springs:water" and unode.name ~= "springs:water_full" then
+			--print("no water near intake")
 			return
 		end
 		
@@ -172,8 +173,9 @@ minetest.register_abm({
 		local phash = net_members[hash]
 		local pnet = networks[phash]
 		local cap = 64
-		local take = math.max(0, cap - pnet.buffer)
+		local take = math.max(0, math.min(ulevel, cap - pnet.buffer))
 		pnet.buffer = pnet.buffer + take
+		--print("intake took "..take.. " water")
 		if ulevel - rate > 0 then
 			minetest.set_node_level(pos, ulevel - take)
 		else
@@ -320,6 +322,7 @@ minetest.register_abm({
 		local pnet = networks[phash]
 		
 		if pnet.buffer <= 0 then
+			--print("spout: no water in pipe")
 			return -- no water in the pipe
 		end
 		
@@ -473,7 +476,7 @@ minetest.register_node("springs:pipe", {
 
 
 minetest.register_craft({
-	output = "springs:pipe 2",
+	output = "springs:pipe 3",
 	recipe = {
 		{"default:steel_ingot", "", "default:steel_ingot"},
 		{"default:steel_ingot", "", "default:steel_ingot"},

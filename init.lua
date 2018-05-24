@@ -255,7 +255,7 @@ local soak = {
 	
 	-- no ladder hacks
 	["default:ladder_wood"] = 65,
-	["default:ladder_steel"] = 65,
+--	["default:ladder_steel"] = 65, -- need to figure out a way for water to flow through ladders
 	["default:sign_wall_wood"] = 65,
 	["default:sign_wall_steel"] = 65,
 
@@ -452,7 +452,7 @@ minetest.register_abm({
 		
 		-- stagnation: this may not work
 		if mylevel == 64 then
-			print("stagnating ".. pos.x .. ","..pos.y..","..pos.z)
+			--print("stagnating ".. pos.x .. ","..pos.y..","..pos.z)
 			minetest.set_node(pos, {name = "springs:water_full"})
 		end
 	end
