@@ -1,8 +1,11 @@
 
+springs = {}
+
 
 local modpath = minetest.get_modpath("springs")
 dofile(modpath.."/pipes.lua")
 dofile(modpath.."/sluice.lua")
+dofile(modpath.."/pump.lua")
 dofile(modpath.."/wells.lua")
 
 --[[
