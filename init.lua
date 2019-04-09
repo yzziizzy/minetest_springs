@@ -202,7 +202,7 @@ minetest.register_abm({
 -- evaporation
 minetest.register_abm({
 	nodenames = {"group:fresh_water"},
-	neighbors = {"group:fresh_water", "air"},
+	neighbors = {"air"},
 	interval = 5,
 	chance = 10,
 	action = function(pos)
@@ -329,7 +329,7 @@ minetest.register_abm({
 minetest.register_abm({
 	nodenames = {"springs:water_full"},
 	neighbors = {"air"},
-	interval = 5,
+	interval = 6,
 	chance = 1,
 	action = function(pos)
 		-- if it's near air it might flow
@@ -341,8 +341,8 @@ minetest.register_abm({
 minetest.register_abm({
 	nodenames = {"springs:water"},
 	neighbors = {"group:fresh_water", "air"},
-	interval = 1,
-	chance = 1,
+	interval = 2,
+	chance = 2,
 	action = function(pos)
 		local mylevel = minetest.get_node_level(pos)
 -- 		print("\n mylevel ".. mylevel)

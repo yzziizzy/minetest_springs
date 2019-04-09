@@ -154,15 +154,15 @@ minetest.register_abm({
 -- 		end
 		
 		local lift = 70
-		print("fpos ".. minetest.pos_to_string(frontpos) .. " | bpos "..minetest.pos_to_string(backpos))
-		print("fp ".. frontnet.in_pressure .. " | bp "..backnet.in_pressure)
+		--print("fpos ".. minetest.pos_to_string(frontpos) .. " | bpos "..minetest.pos_to_string(backpos))
+		--print("fp ".. frontnet.in_pressure .. " | bp "..backnet.in_pressure)
 		local taken, fluid = springs.pipes.take_fluid(frontpos, 10, 0, 2)
 		local pushed = springs.pipes.push_fluid(backpos, fluid, taken, lift)
-		print("pumped " ..taken .. " > "..pushed)
+		--print("pumped " ..taken .. " > "..pushed)
 		
-		if pushed < taken then
-			print("pump leaked ".. (taken - pushed))
-		end
+--		if pushed < taken then
+--			print("pump leaked ".. (taken - pushed))
+--		end
 		
 		--print("")
 	end

@@ -26,7 +26,7 @@ end
 -- centralized network creation for consistency
 local function new_network(pos) 
 	local hash = minetest.hash_node_position(pos)
-	print("new network: hash: ".. hash .." name: " ..netname); 
+--	print("new network: hash: ".. hash .." name: " ..netname); 
 	
 	networks[hash] = {
 		hash = hash,
@@ -65,7 +65,7 @@ local function check_merge(pos)
 			local pnet = networks[nphash]
 			
 			if nil == current_net then
-				print("joining existing network: ".. pnet.name)
+			--	print("joining existing network: ".. pnet.name)
 				net_members[hash] = nphash
 				current_net = nphash
 				pnet.count = pnet.count + 1
@@ -352,12 +352,12 @@ springs.pipes.push_fluid = function(pos, fluid, amount, extra_pressure)
 	pnet.in_pressure = pnet.in_pressure or -32000
 	
 	if pnet.in_pressure > input_pres then
-		print("backflow at intake: " .. pnet.in_pressure.. " > " ..input_pres )
+	--	print("backflow at intake: " .. pnet.in_pressure.. " > " ..input_pres )
 		return 0
 	end
 	
 	pnet.in_pressure = math.max(pnet.in_pressure, input_pres)
-	print("net pressure: ".. pnet.in_pressure)
+	--print("net pressure: ".. pnet.in_pressure)
 	local rate = amount --math.max(1, math.ceil(ulevel / 2))
 	
 	local cap = 64
@@ -492,7 +492,7 @@ minetest.register_abm({
 		pos.y = pos.y + 1
 		local unode = minetest.get_node(pos)
 		if unode.name ~= "springs:water" and unode.name ~= "springs:water_full" then
-			print("no water near intake")
+		--	print("no water near intake")
 			return
 		end
 		
@@ -509,7 +509,7 @@ minetest.register_abm({
 		pnet.in_pressure = pnet.in_pressure or -32000
 		
 		if pnet.in_pressure > pos.y - 1 then
-			print("backflow at intake: " .. pnet.in_pressure.. " > " ..(pos.y - 1) )
+	--		print("backflow at intake: " .. pnet.in_pressure.. " > " ..(pos.y - 1) )
 			return
 		end
 		
