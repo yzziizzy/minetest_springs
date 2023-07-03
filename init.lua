@@ -49,6 +49,7 @@ minetest.register_node("springs:water", {
 	description = "node ",
 	drawtype = "nodebox",
 	paramtype = "light",  
+	paramtype2 = "leveled",  
 	tiles = {
 		{
 			name = "default_river_water_source_animated.png",
@@ -399,9 +400,9 @@ minetest.register_abm({
 		
 		
 -- 		print("x: "..pos.x.." y: "..pos.y.." z: "..pos.z)
--- 		print("air list len ".. #air_nodes)
-		local off = math.random(#air_nodes)
-		
+		-- print("air list len ".. #air_nodes)
+		local off = math.random(0, #air_nodes or 1)
+		-- print("off "..off)
 		for i = 1,#air_nodes do
 			--local theirlevel = minetest.get_node_level(fp)
 			local fp = air_nodes[((i + off) % #air_nodes) + 1]
@@ -424,7 +425,7 @@ minetest.register_abm({
 		
 -- 		print("x: "..pos.x.." y: "..pos.y.." z: "..pos.z)
 -- 		print("list len ".. #flow_nodes)
-		local off = math.random(#flow_nodes)
+		local off = math.random(0, #flow_nodes or 1)
 		
 		for i = 1,#flow_nodes do
 			local fp = flow_nodes[((i + off) % #flow_nodes) + 1]
